@@ -22,28 +22,26 @@ def binarySerchRec(array, leftIndex, rightIndex, item):
     if rightIndex >= leftIndex:
         
         middle = leftIndex + (rightIndex - leftIndex) //2
-    
+
         if (i == array[middle]):
             
             return middle
         
-        if (array[middle] > i):
+        elif (array[middle] > i):
             
-            binarySerchRec(array, leftIndex , middle-1,  itemToFind)
+            return binarySerchRec(array, leftIndex , middle - 1,  itemToFind)
         
         else:
             
-            binarySerchRec(array, middle+1, rightIndex,  itemToFind)
+            return binarySerchRec(array, middle + 1, rightIndex,  itemToFind)
 
     else:
-
+        
         return -1
-
+        
 def binarySearch(array, item):
     
-    element = item
-    v = array
-    binarySerchRec(v, 0, len(v)-1, element)
+    return binarySerchRec(array, 0, len(array)-1, item)
 
 
 a = letturaArray()
