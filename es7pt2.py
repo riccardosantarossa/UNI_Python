@@ -1,11 +1,10 @@
 from __future__ import print_function
-raw_input = input
 
 #PARTE 2
 
 #Lettura dell'array in input
 def letturaArray():
-    tokens = raw_input().split(" ")
+    tokens = input().split(" ")
     return [int(x) for x in tokens if x]  # "if x" is for filtering out empty tokens
 
 
@@ -35,15 +34,41 @@ class SegmentNode:
             self.left = SegmentNode(a,low, mid)
             self.right = SegmentNode(a,mid, high)
             self.massimo = max(self.left.massimo, self.right.massimo)
-            
+     
+     
+def query(i, j, s):
     
+    assert s != None
+    assert s.low <= i < j <= s.high
+    
+    #caso fortunato i, j = low, high
+    if s.low == i and s.high == j:  
+        return s.massimo
+    
+    #caso in cui high-low > j-i quindi s.lef,s.right !=
+    assert s.left != None and s.right != None
+    assert s.left.high == s.right.low 
+    mid = s.left.high
+    
+    #caso in cui mid cade fuori e a sinistra di i,j
+    if  mid <= i: 
+        return query(i, j, s.right)
+    elif j <= mid:
+        return query(i, j, s.left)
+    else: 
+         assert i <mid <= j  
+         return max(query(i, mid, s.left), query(i, mid, s.right))
+     
+
 
 a = letturaArray()
 b = letturaArray() 
 
+c = [(i, j) for (i,j) in zip(b[0::2], b[1::2])]
+s= SegmentNode(a, 0, len(a))
 
-#Creo l'array di intervalli da b
-arrIntervalli = [(i, j) for (i,j) in zip(b[0::2], b[1::2])]
+for (i,j) in c: print(query(1,7,s))
+
 
 
      
