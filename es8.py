@@ -6,7 +6,6 @@ def letturaArray():
 
 
 #Prima soluzione con due cicli for, tempo QUADRATICO
-
 #a = letturaArray()
 #s = int(input())
 #
