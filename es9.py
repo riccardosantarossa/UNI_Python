@@ -6,6 +6,9 @@ def letturaArray():
 
 def findInterval(a, s):
     
+    if len(a) == 0:
+        return -1,-1
+    
     i = 0
     j = 0
     sommaCorrente = a[j]
