@@ -10,7 +10,7 @@ def findInterval(a, s):
     j = 0
     sommaCorrente = a[j]
     
-    while i <= j < len(a):  #sommaCorrente = a[i:j+1]
+    while i < len(a) and j < len(a):  #sommaCorrente = a[i:j+1]
         
         if sommaCorrente == s:
             return i,j
@@ -20,7 +20,7 @@ def findInterval(a, s):
         else:
             i += 1
             sommaCorrente -= a[i-1] 
-
+        
     return -1, -1
 
 a = letturaArray()
