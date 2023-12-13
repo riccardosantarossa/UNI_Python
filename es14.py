@@ -26,9 +26,9 @@ class MinHeap:
         self.heapify(0)
     
     #inserisce un elemento nella heap portandolo nel posto giusto
-    def insert(self):
+    def insert(self, x):
         
-        self.minHeap.append() #aggiungo in coda all'array
+        self.minHeap.append(x) #aggiungo in coda all'array
         self.moveUp(len(self.minHeap) - 1) #sposto il nuovo nodo dove effettivamente serve
         
     
@@ -63,8 +63,8 @@ class MinHeap:
         if left < len(self.minHeap) and self.minHeap[left] < self.minHeap[argMin]:
             argMin = left
         
-        if left < len(self.minHeap) and self.minHeap[right] < self.minHeap[argMin]:
-            argMin = left
+        if right < len(self.minHeap) and self.minHeap[right] < self.minHeap[argMin]:
+            argMin = right
             
         if i != argMin:
             self.minHeap[i], self.minHeap[argMin] = self.minHeap[argMin], self.minHeap[i]
@@ -95,26 +95,34 @@ while True:
     if elts[0] == "exit" :
         break
     
+    #costruzione della heap dato un vettore
     elif elts[0] == "build":
         a = [int(x) for x in elts[1:] if x]
         h.buildHeap(a)
-        
+    
+    #calcolo della lunghezza   
     elif elts[0] == "length":
         print(h.length())
-       
+    
+    #estrazione del minimo
     elif elts[0] == "getmin":
         print(h.getmin())
-               
+    
+    #estrazione del nodo radice
     elif elts[0] == "extract":
         print(h.extract())
     
+    #inserimento nella heap
     elif elts[0] == "insert":
         el = int(elts[1])
-        print(h.insert(el))
-        
+        h.insert(el)
+    
+    #modifica di un valore nella heap in una data posizione con 
+    #il valore dato     
     elif elts[0] == "change":
         i = int(elts[1])
         x = int(elts[2])
-        print(h.change(i, x))
-        
+        h.change(i, x)
+    
+    #stampa  
     print(*h.minHeap)
