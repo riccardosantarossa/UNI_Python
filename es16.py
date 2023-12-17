@@ -5,11 +5,33 @@
 
 def letturaArray():
     tokens = input().split(" ")
-
-    return [int(x) for x in tokens if x]  # "if x" is for filtering out empty tokens
-
+    return [x for x in tokens]  # "if x" is for filtering out empty tokens
 
 
-def inOrder(a):
+def left(i):
+    return  2*i + 1 
+
+def right(i):
+    return  2*i + 2
     
+
+def inOrder(a, x = None):
     
+    if x == None:
+        x = 0
+    
+    r = right(x)
+    l = left(x)
+        
+    if a[x] != 'NULL' and r < len(a):
+        
+        inOrder(a, l)
+        print(a[x])
+        inOrder(a, r)
+    
+        
+
+            
+        
+a = letturaArray()
+inOrder(a)
