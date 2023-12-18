@@ -3,35 +3,51 @@
 #e produca in output l'array corrispondente alla visita "in-order", ottenuta processando ricorsivamente l'albero bianario nel seguente ordine: 
 #prima il sotto-albero del figlio sinistro, poi il nodo corrente ed infine il sotto-albero del figlio destro.
 
-def letturaArray():
-    tokens = input().split(" ")
-    return [x for x in tokens]  # "if x" is for filtering out empty tokens
-
-
-def left(i):
-    return  2*i + 1 
-
-def right(i):
-    return  2*i + 2
+class Tree:
     
+    #definizione dell'oggetto nodo
+    def __init__(self, key):
+        
+        self.key = key
+        self.left = None
+        self.right = None
 
-def inOrder(a, x = None):
+
+def createTree(keys):
     
-    if x == None:
-        x = 0
+    if not keys:
+        return None
     
-    r = right(x)
-    l = left(x)
-        
-    if a[x] != 'NULL' and r < len(a):
-        
-        inOrder(a, l)
-        print(a[x])
-        inOrder(a, r)
+    key = keys.pop()
     
+    if key == "NULL":
+        return None
+    
+    node = Tree(int(key))
+    node.right = createTree(keys)
+    node.left = createTree(keys)
+    
+    
+def visitaInorder(root, res):
+    
+    if root:
+        visitaInorder(root.left, res)
+        res.append(root.key)
+        visitaInorder(root.right, res)
         
 
-            
-        
-a = letturaArray()
-inOrder(a)
+def inOrder(v):
+    
+    treeNodes = v.split()
+    treeNodes.reverse()
+    root = createTree(treeNodes)
+    res = []
+    visitaInorder(root, res)
+    return res[::-1]
+
+#MAIN
+a = input()
+out = inOrder(a)
+print(out)
+
+
