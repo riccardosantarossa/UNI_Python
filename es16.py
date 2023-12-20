@@ -6,9 +6,9 @@
 class Tree:
     
     #definizione dell'oggetto nodo
-    def __init__(self, key):
+    def __init__(self, data):
         
-        self.key = key
+        self.key = data
         self.left = None
         self.right = None
 
