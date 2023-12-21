@@ -89,6 +89,7 @@ h2.insert(h.minHeap[0], 0)
 for i in range(0, int(k)):
     
     (x, y) = h2.getmin()
+    
     h2.extract()
     
     l = h.left(y)

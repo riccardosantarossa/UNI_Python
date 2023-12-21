@@ -24,8 +24,10 @@ class auxHeap:
     #estraggo un elemento dalla heap
     def extract(self):
         
-        self.aux[0] = self.aux.pop() #tolgo soltanto l'ultimo elemento dell'array, e me lo ritorna
-        self.heapify(0)
+        self.aux.pop(0) #tolgo soltanto l'ultimo elemento dell'array, e me lo ritorna
+
+        if len(self.aux) > 0:
+            self.heapify(0)
     
     #inserisce un elemento nella heap portandolo nel posto giusto
     def insert(self, x, i):
