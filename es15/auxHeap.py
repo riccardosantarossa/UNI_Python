@@ -1,17 +1,15 @@
 
 class nodeWithIndex:
     
-    def __init__(self, data, indice):
+    def __init__(self, data, index):
         
         self.data = data
-        self.indice = indice
+        self.index = index
 
 
 class auxHeap:
     
-    n = nodeWithIndex(None, None)
-    
-    aux = []
+    aux = [nodeWithIndex(data=float('+inf'), index=0)] * 0
     
     def length(self):
         
@@ -21,7 +19,7 @@ class auxHeap:
     def getmin(self):
         
         assert len(self.aux) > 0, "Heap Vuota"
-        return self.aux[0].data, self.aux[0].indice #il minimo di una aux sta in prima posizione
+        return self.aux[0].data, self.aux[0].index #il minimo di una aux sta in prima posizione
         
     #estraggo un elemento dalla heap
     def extract(self):
@@ -30,9 +28,11 @@ class auxHeap:
         self.heapify(0)
     
     #inserisce un elemento nella heap portandolo nel posto giusto
-    def insert(self, x):
+    def insert(self, x, i):
         
-        self.aux.append(x) #aggiungo in coda all'array
+        n = nodeWithIndex(data= x, index = i)
+        
+        self.aux.append(n) #aggiungo in coda all'array
         self.moveUp(len(self.aux) - 1) #sposto il nuovo nodo dove effettivamente serve
         
     
@@ -48,13 +48,13 @@ class auxHeap:
     #modifico un elemento all'interno della heap   
     def change(self, i, x):
         
-        assert i < len(self.aux), "errore nell'indice"
+        assert i < len(self.aux), "errore nell'index"
         
-        if x < self.aux[i]:
-            self.aux[i] = x
+        if x[0] < self.aux[i]:
+            self.aux[i][0] = x[0]
             self.moveUp(i)
-        elif x > self.aux[i]:
-            self.aux[i] = x
+        elif x[0] > self.aux[i][0]:
+            self.aux[i][0] = x[0]
             self.heapify(i)
     
     #correzione della Heap VERSO IL BASSO
@@ -64,14 +64,14 @@ class auxHeap:
         
         argMin = i  #posizione dell'elemento corrente
         
-        if left < len(self.aux) and self.aux[left] < self.aux[argMin]:
+        if left < len(self.aux) and self.aux[left][0] < self.aux[argMin][0]:
             argMin = left
         
-        if right < len(self.aux) and self.aux[right] < self.aux[argMin]:
+        if right < len(self.aux) and self.aux[right][0] < self.aux[argMin][0]:
             argMin = right
             
         if i != argMin:
-            self.aux[i], self.aux[argMin] = self.aux[argMin], self.aux[i]
+            self.aux[i][0], self.aux[argMin][0] = self.aux[argMin][0], self.aux[i][0]
             self.heapify(argMin)
     
     
@@ -83,15 +83,8 @@ class auxHeap:
         
         parent = (i + 1) // 2 -1
         
-        if self.aux[i] < self.aux[parent]:
-            self.aux[i], self.aux[parent] = self.aux[parent], self.aux[i]
+        if self.aux[i].data < self.aux[parent].data:
+            self.aux[i].data, self.aux[parent].data = self.aux[parent].data, self.aux[i].data
             
         self.moveUp(parent)
         
-
-
-h = auxHeap()
-
-a = {(3, 0), (2, 1), (1,2)}
-h.buildHeap(a)
-print(*h.aux)

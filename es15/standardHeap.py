@@ -9,6 +9,12 @@ class MinHeap:
     
     minHeap = []
     
+    def left(i):
+        return  2*i +1 
+    
+    def right(i):
+        return  2*i +2
+    
     def length(self):
         
         return len(self.minHeap)
@@ -40,6 +46,8 @@ class MinHeap:
         for i in range (len(self.minHeap) -1, -1, -1):
             self.heapify(i)
             
+        return self
+            
             
     #modifico un elemento all'interno della heap   
     def change(self, i, x):
@@ -55,6 +63,7 @@ class MinHeap:
     
     #correzione della Heap VERSO IL BASSO
     def heapify(self, i):
+        
         left = 2*i +1 
         right =  2*i +2
         
@@ -85,44 +94,3 @@ class MinHeap:
         self.moveUp(parent)
         
         
-h = MinHeap()
-
-while True:
-    
-    cmd = input()
-    elts = cmd.split(" ")
-    
-    if elts[0] == "exit" :
-        break
-    
-    #costruzione della heap dato un vettore
-    elif elts[0] == "build":
-        a = [int(x) for x in elts[1:] if x]
-        h.buildHeap(a)
-    
-    #calcolo della lunghezza   
-    elif elts[0] == "length":
-        print(h.length())
-    
-    #estrazione del minimo
-    elif elts[0] == "getmin":
-        print(h.getmin())
-    
-    #estrazione del nodo radice
-    elif elts[0] == "extract":
-        print(h.extract())
-    
-    #inserimento nella heap
-    elif elts[0] == "insert":
-        el = int(elts[1])
-        h.insert(el)
-    
-    #modifica di un valore nella heap in una data posizione con 
-    #il valore dato     
-    elif elts[0] == "change":
-        i = int(elts[1])
-        x = int(elts[2])
-        h.change(i, x)
-    
-    #stampa  
-    print(*h.minHeap)
