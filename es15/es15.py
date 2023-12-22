@@ -76,34 +76,32 @@ def quickSelect(a, h, i=0, j=None):
 from standardHeap import * 
 from auxHeap import * 
 
+def heapSelect(a, k):
+    h = MinHeap()
+    h2 = auxHeap()
 
-h = MinHeap()
-h2 = auxHeap()
+    h = h.buildHeap(a)
+    h2.insert(h.minHeap[0], 0)
+
+    for i in range(0, int(k)):
+        
+        (x, y) = h2.getmin()
+        
+        h2.extract()
+        
+        l = 2*y + 1
+        r = 2*y + 2
+        
+        if l != None and l < h.length():
+            h2.insert(h.minHeap[l], l)
+            
+        if r != None and r < h.length():
+            h2.insert(h.minHeap[r], r)
+        
+    (xmin, indmin) = h2.getmin()
+
+    return (xmin)
 
 a = letturaArray()
-k = input()
-
-h = h.buildHeap(a)
-h2.insert(h.minHeap[0], 0)
-
-for i in range(0, int(k)):
-    
-    (x, y) = h2.getmin()
-    
-    h2.extract()
-    
-    l = h.left(y)
-    r = h.right(y)
-    
-    if l != None:
-        h2.insert(h[l], l)
-        
-    if r != None:
-        h2.insert(h[r], r)
-    
-(xmin, indmin) = h2.getmin()
-
-print(xmin)
-
-
-#print(quickSelect(a, h))
+k = int(input()) -1
+print(heapSelect(a, k))

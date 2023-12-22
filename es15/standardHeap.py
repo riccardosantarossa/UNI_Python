@@ -9,12 +9,6 @@ class MinHeap:
     
     minHeap = []
     
-    def left(i):
-        return  2*i +1 
-    
-    def right(i):
-        return  2*i +2
-    
     def length(self):
         
         return len(self.minHeap)
