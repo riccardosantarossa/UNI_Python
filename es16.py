@@ -41,7 +41,7 @@ def visitaInorder(root, res):
 def inOrder(v):
     
     treeNodes = v.split()
-    treeNodes.reverse()
+    treeNodes.reverse() 
     root = createTree(treeNodes)
     res = []
     visitaInorder(root, res)
