@@ -44,7 +44,7 @@ def visitaInorder(root, res):
 def inOrder(v):
     
     treeNodes = v.split()
-    treeNodes.reverse()
+    treeNodes.reverse() #costruisco l'albero partendo dal basso
     root = createTree(treeNodes)
     res = []
     visitaInorder(root, res)
@@ -66,7 +66,7 @@ a = input()
 #Faccio la INORDER
 binaryTree = inOrder(a)
 tryBST = binaryTree.copy()
-#Inverto l'ordine
+#Inverto l'ordine per avere l'albero orientato correttamente
 tryBST.reverse()
 #Controllo
 print(checkBST(tryBST))
