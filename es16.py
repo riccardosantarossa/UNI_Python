@@ -18,14 +18,16 @@ def createTree(keys):
     if not keys:
         return None
     
-    key = keys.pop()
+    nodeKey = keys.pop()
     
-    if key == "NULL":
+    if nodeKey == "NULL":
         return None
     
-    node = Tree(int(key))
+    node = Tree(int(nodeKey))
     node.right = createTree(keys)
     node.left = createTree(keys)
+    
+    return node
     
     
 def visitaInorder(root, res):
@@ -48,6 +50,6 @@ def inOrder(v):
 #MAIN
 a = input()
 out = inOrder(a)
-print(out)
+print(*out)
 
 
