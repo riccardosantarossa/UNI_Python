@@ -37,13 +37,39 @@ class Tree:
         
             t.tree.append(node)
 
-
-
-    def showTree(self, t):
-        for x in t:
-            print(str(x.key)+ ":" + x.value)
+                
+    #mostra l'albero in forma polacca
+    def show(self, t, n):
+        
+        if n is None:
+            return "NULL"
+        else:
+            return str(n.key) + ":" + n.value + " " + t.show(self, n.left) + " " +  t.show(self, n.right)
+            
+           
+    #cancella l'albero
+    def clear(self, t):
+        t.tree = [None]
+        
+        
+    #ricerca un nodo all'interno dell'albero
+    def find(self, t, n, key):
+        
+        if n is None:
+            print("Node not exists")
+        else:
+            if n.key == key:
+                print(n.value)
+            elif k > n.key:
+                t.find(t, n.right, key)
+            else:
+                t.find(t, n.left, key)
             
 
+    #rimuove il nodo scelto dall'albero
+    def remove(self, t, key):
+        #TODO
+        return 0
 
 #MAIN
 
@@ -57,7 +83,7 @@ while True:
     if elts[0] == "exit" :
         break
     
-    #inserimento nell'albero'
+    #inserimento nell'albero
     elif elts[0] == "insert":
         k = int(elts[1])
         v = elts[2]
@@ -65,7 +91,7 @@ while True:
     
     #calcolo della lunghezza   
     elif elts[0] == "show":
-        t.showTree(t.tree)
+        print(t.show(t, t.tree[0]))
     
     #estrazione del minimo
     elif elts[0] == "remove":
@@ -73,8 +99,8 @@ while True:
     
     #estrazione del nodo radice
     elif elts[0] == "find":
-        print("")
+        t.find(t, t.tree[0], int(elts[1]))
 
 
     elif elts[0] == "clear":
-        print("")
+        t.clear(t)
