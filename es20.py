@@ -67,9 +67,13 @@ class Tree:
             
 
     #rimuove il nodo scelto dall'albero
-    def remove(self, t, key):
-        #TODO
-        return 0
+    def removeNode(self, t, key):
+        
+        treeCopy = t.tree.copy()
+        t.clear(t)
+        for x in treeCopy:
+            if x.key != key:
+                t.insertNode(x.key, x.value)
 
 #MAIN
 
@@ -95,8 +99,8 @@ while True:
     
     #estrazione del minimo
     elif elts[0] == "remove":
-        print("")
-    
+        t.removeNode(t, int(elts[1]))
+       
     #estrazione del nodo radice
     elif elts[0] == "find":
         t.find(t, t.tree[0], int(elts[1]))
