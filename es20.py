@@ -10,8 +10,7 @@ class Tree:
         self.value = value
     
     tree = [None]
-
-
+    
     #inserimento del nodo al posto giusto
     def insertNode(self, k, v):
         node = Tree(k, v)
@@ -70,28 +69,18 @@ class Tree:
     def searchMin(self, t):
         
         min = t[0]
-        for x in t:
-            if x.key < min.key:
-                min = x
+        if min.left != None:
+            if min.left.key < min.key:
+                min = min.left
         
         return min
         
-    #trova il successore
-    def findSuccessor(self, t, n):
-        
-        if n.right != "NULL":
-            return t.searchMin(n.right)
-
 
     #rimuove il nodo scelto dall'albero
     def removeNode(self, t, key):
         
-        n = t.find(t.tree[0], key)
         
-        if n.left == "NULL" and n.right == "NULL":
-            t.tree.remove(n)
-        else:
-            x = t.findSuccessor(n)
+        
 
 #MAIN
 
@@ -117,7 +106,7 @@ while True:
     
     #estrazione del minimo
     elif elts[0] == "remove":
-        t.removeNode(t, int(elts[1]))
+        t.removeNode(t, t.tree[0], int(elts[1]))
        
     #estrazione del nodo radice
     elif elts[0] == "find":
@@ -125,5 +114,4 @@ while True:
 
 
     elif elts[0] == "clear":
-        #t.clear(t)
-        print(t.searchMin(t.tree))
+        t.clear(t)
