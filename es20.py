@@ -64,16 +64,34 @@ class Tree:
                 t.find(t, n.right, key)
             else:
                 t.find(t, n.left, key)
-            
+    
+    
+    #trova il minimo in un albero/sottoalbero        
+    def searchMin(self, t):
+        
+        min = t[0]
+        for x in t:
+            if x.key < min.key:
+                min = x
+        
+        return min
+        
+    #trova il successore
+    def findSuccessor(self, t, n):
+        
+        if n.right != "NULL":
+            return t.searchMin(n.right)
+
 
     #rimuove il nodo scelto dall'albero
     def removeNode(self, t, key):
         
-        treeCopy = t.tree.copy()
-        t.clear(t)
-        for x in treeCopy:
-            if x.key != key:
-                t.insertNode(x.key, x.value)
+        n = t.find(t.tree[0], key)
+        
+        if n.left == "NULL" and n.right == "NULL":
+            t.tree.remove(n)
+        else:
+            x = t.findSuccessor(n)
 
 #MAIN
 
@@ -107,4 +125,5 @@ while True:
 
 
     elif elts[0] == "clear":
-        t.clear(t)
+        #t.clear(t)
+        print(t.searchMin(t.tree))
