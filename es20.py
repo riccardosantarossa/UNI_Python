@@ -11,108 +11,120 @@ class Node:
         self.value = value
     
     
-class Tree:
+#inserimento del nodo al posto giusto
+def insertNode(t, k, v):
     
-    tree = [None]
+    node = Node(k, v , 0)
     
-    #inserimento del nodo al posto giusto
-    def insertNode(self,t, k, v):
-        
-        node = Node(k, v , 0)
-        
-        x = self.tree[0]
-        y = None
+    x = t[0]
+    y = None
 
-        while(x is not None):
-            y = x
-            if x.key > node.key:
-                x = y.left
-            else:
-                x = y.right
-        
-        if y == None:
-            self.tree[0] = node
+    while(x is not None):
+        y = x
+        if x.key > node.key:
+            x = y.left
         else:
-            node.parent = y 
-            if node.key < y.key:
-                y.left = node
-            else:
-                y.right = node
+            x = y.right
+    
+    if y == None:
+        t[0] = node
+    else:
+        node.parent = y 
+        if node.key < y.key:
+            y.left = node
+        else:
+            y.right = node
+    
+        t.append(node)
+        node.index = len(t) - 1  
         
-            self.tree.append(node)
-            node.index = len(self.tree) - 1  
-            
 
-                
-    #mostra l'albero in forma polacca
-    def show(self, t, n):
-        
-        if n is None:
-            return "NULL"
-        else:
-            return str(n.key) + ":" + n.value + " " + t.show(self, n.left) + " " +  t.show(self, n.right)
             
-           
-    #cancella l'albero
-    def clear(self, t):
-        t.tree = [None]
+#mostra l'albero in forma polacca
+def show(t, n):
+    
+    if n is None:
+        return "NULL"
+    else:
+        return str(n.key) + ":" + n.value + " " + show(t, n.left) + " " + show(t, n.right)
         
-        
-    #ricerca un nodo all'interno dell'albero
-    def find(self, t, n, key):
-        
-        if n is None:
-            print("Node not exists")
+            
+#ricerca un nodo all'interno dell'albero
+def find(t, n, key):
+    
+    if n is None:
+        print("Node not exists")
+    else:
+        if n.key == key:
+            return n.index
+        elif key > n.key:
+            return find(t, n.right, key)
         else:
-            if n.key == key:
-                return n.index
-            elif key > n.key:
-                t.find(t, n.right, key)
-            else:
-                t.find(t, n.left, key)
+            return find(t, n.left, key)
+
+
+#trova il minimo in un albero/sottoalbero        
+def searchMin(t, n):
     
+    min = n
+    if min.left != None:
+        if min.left.key < min.key:
+            min = min.left
     
-    #trova il minimo in un albero/sottoalbero        
-    def searchMin(self, t):
+    return min.key
+
+
+#trova il successore del nodo con chiave richiesta
+def findSuccessor(t, key):
+    
+    xIndex = find(t, t[0], key)
+    x = t[xIndex]
+    
+    if x.right is not None:
+        return searchMin(t, x.right)
+    else:
+        succ = x.parent
+        while succ is not None and x.key == succ.right.key:
+            x = succ
+            succ = x.parent
         
-        min = t[0]
-        if min.left != None:
-            if min.left.key < min.key:
-                min = min.left
-        
-        return min
+        return succ
+
+#rimuove il nodo scelto dall'albero
+def removeNode(t, key):
     
+    rmIndex = find(t, t[0], key)
+    rmNode = t[rmIndex]
+    
+    if rmNode.left is None or rmNode.right is None:
+        x = rmNode
+    else:
+        x = findSuccessor(t, rmNode.key)
+        
+    if x.left is not None:
+        v = x.left
+    else:
+        v = x.right
+    
+    if v is not None:
+        v.parent = x.parent
+    
+    if x.parent is not None:
+        if x.key == x.parent.left.key:
+            x.parent.left = v
+        else:
+            x.parent.right = v
+    else:
+        t[0] = v
+        
+    if x.key != key:
+        key = x.key
    
-    #trova il successore del nodo con chiave richiesta
+    t.pop(rmIndex)
     
-    
-    #rimuove il nodo scelto dall'albero
-    """def removeNode(self, t, key):
-        
-        rmIndex = t.find(t.tree[0], key).index
-        rmNode = self.tree[rmIndex]
-        
-        if rmNode.left is None and rmNode.right is None:
-            self.tree.pop(rmIndex)
-        
-        if rmNode.left is not None and rmNode.right is None:
-            x = rmNode.parent
-            rmNode.left.parent = x
-        
-        if rmNode.left is None and rmNode.right is not None:
-            x = rmNode.parent 
-            rmNode.right.parent = x
-            
-        if rmNode.left is not None and rmNode.right is not None:
-            x = self.findIndex(self.findSuccessor(rmNode.key))"""
-        
-        
-        
-        
-
 #MAIN
 
-t = Tree()
+t = [None]
 
 while True:
     
@@ -126,23 +138,22 @@ while True:
     elif elts[0] == "insert":
         k = int(elts[1])
         v = elts[2]
-        t.insertNode(t,k,v)
+        insertNode(t,k,v)
     
     #calcolo della lunghezza   
     elif elts[0] == "show":
-        print(t.show(t, t.tree[0]))
+        print(show(t, t[0]))
     
     #estrazione del minimo
     elif elts[0] == "remove":
-        t.removeNode(t, t.tree[0], int(elts[1]))
+        removeNode(t, int(elts[1]))
        
     #estrazione del nodo radice
     elif elts[0] == "find":
-        printIndex = t.find(t, t.tree[0], int(elts[1]))
-        #print(t.tree[printIndex].value)
-        print(printIndex)
+        printIndex = find(t, t[0], int(elts[1]))
+        print(t[printIndex].value)
 
 
     elif elts[0] == "clear":
-        #t.clear(t)
-        print(t.findIndex(t, elts[1]))
+        t = [None]
+        
