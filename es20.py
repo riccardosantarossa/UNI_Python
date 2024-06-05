@@ -12,11 +12,11 @@ class Node:
     
     
 #inserimento del nodo al posto giusto
-def insertNode(t, k, v):
+def insertNode(t, root, k, v):
     
-    node = Node(k, v , 0)
+    node = Node(k, v , len(t))
     
-    x = t[0]
+    x = root[0]
     y = None
 
     while(x is not None):
@@ -27,7 +27,7 @@ def insertNode(t, k, v):
             x = y.right
     
     if y == None:
-        t[0] = node
+        root[0] = node
     else:
         node.parent = y 
         if node.key < y.key:
@@ -35,11 +35,10 @@ def insertNode(t, k, v):
         else:
             y.right = node
     
-        t.append(node)
-        node.index = len(t) - 1  
+    t.append(node)
         
-
-            
+        
+       
 #mostra l'albero in forma polacca
 def show(t, n):
     
@@ -63,43 +62,31 @@ def find(t, n, key):
             return find(t, n.left, key)
 
 
-#trova il minimo in un albero/sottoalbero        
-def searchMin(t, n):
-    
-    min = n
-    if min.left != None:
-        if min.left.key < min.key:
-            min = min.left
-    
-    return min.key
-
-
 #trova il successore del nodo con chiave richiesta
-def findSuccessor(t, key):
+def findSuccessor(t, root, key):
     
-    xIndex = find(t, t[0], key)
+    xIndex = find(t, root[0], key)
     x = t[xIndex]
     
-    if x.right is not None:
-        return searchMin(t, x.right)
-    else:
-        succ = x.parent
-        while succ is not None and x.key == succ.right.key:
-            x = succ
-            succ = x.parent
-        
-        return succ
+    x = x.right
+    
+    while x.left is not None:
+        x = x.left
+    
+    return x.index
+    
 
 #rimuove il nodo scelto dall'albero
-def removeNode(t, key):
+def removeNode(t, root, key):
     
-    rmIndex = find(t, t[0], key)
-    rmNode = t[rmIndex]
+    rmIndex = find(t, root[0], key)
+    z = t[rmIndex]
     
-    if rmNode.left is None or rmNode.right is None:
-        x = rmNode
+    if z.left is None or z.right is None:
+        x = z
     else:
-        x = findSuccessor(t, rmNode.key)
+        rmIndex = findSuccessor(t, root, z.key)
+        x = t[rmIndex]
         
     if x.left is not None:
         v = x.left
@@ -107,24 +94,35 @@ def removeNode(t, key):
         v = x.right
     
     if v is not None:
+        
+        vIndex = find(t, root[0], v.key)
+        v = t[vIndex]
         v.parent = x.parent
     
     if x.parent is not None:
-        if x.key == x.parent.left.key:
-            x.parent.left = v
-        else:
-            x.parent.right = v
-    else:
-        t[0] = v
         
-    if x.key != key:
-        key = x.key
+        pIndex = find(t, root[0], x.parent.key)
+        pNode = t[pIndex]
+        
+        if x.parent.left is not None:
+            if x.key == x.parent.left.key:
+                pNode.left = v
+            else:
+                pNode.right = v
+        else:
+            pNode.right = v
+    else:
+        root[0] = v
+        
+    if x.index != z.index:
+        z.key = x.key
+        z.value = x.value
    
-    t.pop(rmIndex)
     
 #MAIN
 
-t = [None]
+root = [None]
+t = []
 
 while True:
     
@@ -138,22 +136,23 @@ while True:
     elif elts[0] == "insert":
         k = int(elts[1])
         v = elts[2]
-        insertNode(t,k,v)
+        insertNode(t,root,k,v)
     
     #calcolo della lunghezza   
     elif elts[0] == "show":
-        print(show(t, t[0]))
+        print(show(t, root[0]))
     
     #estrazione del minimo
     elif elts[0] == "remove":
-        removeNode(t, int(elts[1]))
+        removeNode(t, root, int(elts[1]))
        
     #estrazione del nodo radice
     elif elts[0] == "find":
-        printIndex = find(t, t[0], int(elts[1]))
+        printIndex = find(t, root[0], int(elts[1]))
         print(t[printIndex].value)
 
 
     elif elts[0] == "clear":
-        t = [None]
+        t = []
+        root = [None]
         
