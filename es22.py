@@ -1,4 +1,4 @@
-#da implementare con remove-height
+
 class Node:
 
     def __init__(self, data, value, index):
@@ -10,8 +10,80 @@ class Node:
         self.index = index
         self.value = value
         self.height = 1
+
+def rightRotate(xIndex):
     
-def FixHeightUpwInsert(nIndex):
+    x = t[xIndex]
+    y = t[x.left.index]
+    
+    if y.right is not None:
+        z2 = t[y.right.index]
+    else:
+        z2 = None
+ 
+    y.parent = x.parent
+
+    if y.parent is not None:
+        if x.key == y.parent.left.key:
+            y.parent.left = y
+        else:
+            y.parent.right = y
+    else:
+        root[0] = y
+        
+    x.parent = y
+    x.left = z2
+    if z2 is not None:
+        z2.parent = x
+        x.height = z2.height + 1
+    elif x.right is None:
+        x.height = 1
+    else:
+        x.height = x.right.height + 1 
+        
+    y.right = x
+    y.height = x.height + 1
+    
+    if root[0].key == y.key:
+        root[0] = y
+
+def leftRotate(xIndex):
+
+    x = t[xIndex]
+    y = t[x.right.index]
+    
+    if y.left is not None:
+        z1 = t[y.left.index]
+    else:
+        z1 = None
+ 
+    y.parent = x.parent
+
+    if y.parent is not None:
+        if x.key == y.parent.right.key:
+            y.parent.right = y
+        else:
+            y.parent.left = y
+    else:
+        root[0] = y
+        
+    x.parent = y
+    x.right = z1
+    if z1 is not None:
+        z1.parent = x
+        x.height = z1.height + 1
+    elif x.left is None:
+        x.height = 1
+    else:
+        x.height = x.left.height + 1 
+        
+    y.left = x
+    y.height = x.height + 1
+    
+    if root[0].key == y.key:
+        root[0] = y
+ 
+def fixHeightUpwInsert(nIndex):
     
     n = t[nIndex]
     if n.parent is None:
@@ -19,7 +91,7 @@ def FixHeightUpwInsert(nIndex):
     else:
         par = t[n.parent.index] 
 
-    #risalgo l'albero modificando le altezze necessarie - bigO(n)
+    #risalgo l'albero modificando le altezze necessarie 
     while par is not None:
         if par.left is not None and par.left.key == n.key:
             #n è figlio sinistro
@@ -77,7 +149,7 @@ def insertNode(t, root, k, v):
             y.right = node
     
     t.append(node)
-    FixHeightUpwInsert(node.index)    
+    fixHeightUpwInsert(node.index)    
         
        
 #mostra l'albero in forma polacca
@@ -116,7 +188,7 @@ def findSuccessor(t, root, key):
     
     return x.index
     
-def FixHeightUpwRemove(nIndex):
+def fixHeightUpwRemove(nIndex):
     
     n = t[nIndex]
     if n.right is None and n.left is None:
@@ -201,7 +273,7 @@ def removeNode(t, root, key):
         else:
             pNode.right = v
 
-        FixHeightUpwRemove(pNode.index)
+        fixHeightUpwRemove(pNode.index)
 
     else:
         root[0] = v
@@ -244,13 +316,6 @@ while True:
     elif elts[0] == "find":
         printIndex = find(t, root[0], int(elts[1]))
         print(t[printIndex].value)
-
-    #altezza dell'albero T
-    elif elts[0] == "height":
-        if root[0] is None:
-            print("0")
-        else:
-            print(root[0].height)
  
     elif elts[0] == "clear":
         t = []
