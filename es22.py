@@ -24,7 +24,7 @@ def rightRotate(xIndex):
     y.parent = x.parent
 
     if y.parent is not None:
-        if x.key == y.parent.left.key:
+        if y.parent.left is not None and x.key == y.parent.left.key:
             y.parent.left = y
         else:
             y.parent.right = y
@@ -35,7 +35,10 @@ def rightRotate(xIndex):
     x.left = z2
     if z2 is not None:
         z2.parent = x
-        x.height = z2.height + 1
+        if x.right is not None:
+            x.height = max(z2.height, x.right.height) + 1
+        else:    
+            x.height = z2.height + 1
     elif x.right is None:
         x.height = 1
     else:
@@ -59,8 +62,8 @@ def leftRotate(xIndex):
  
     y.parent = x.parent
 
-    if y.parent is not None:
-        if x.key == y.parent.right.key:
+    if y.parent is not None :
+        if y.parent.right is not None and x.key == y.parent.right.key:
             y.parent.right = y
         else:
             y.parent.left = y
@@ -71,7 +74,10 @@ def leftRotate(xIndex):
     x.right = z1
     if z1 is not None:
         z1.parent = x
-        x.height = z1.height + 1
+        if x.left is not None:
+            x.height = max(z1.height, x.left.height) + 1
+        else:
+            x.height = z1.height + 1
     elif x.left is None:
         x.height = 1
     else:
@@ -93,28 +99,98 @@ def fixHeightUpwInsert(nIndex):
 
     #risalgo l'albero modificando le altezze necessarie 
     while par is not None:
+        
         if par.left is not None and par.left.key == n.key:
+            
             #n è figlio sinistro
             if par.right is not None:
-                if par.right.height < n.height:
-                    par.height = par.height + 1
+                if n.height - par.right.height == 2:
+                    #rotazione a destra su parent, richiede controllo dei ripoti
+                    if n.left is not None:
+                        lhn = n.left.height
+                    else:
+                        lhn = 0
+                    if n.right is not None:
+                        rhn = n.right.height
+                    else:
+                        rhn = 0
+                    
+                    if lhn >= rhn:
+                        rightRotate(par.index)
+                    else:
+                        leftRotate(n.index)
+                        rightRotate(par.index)
+                elif n.height - par.right.height == 1:
+                    par.height = n.height + 1
                 else:
                     break
             
             else:
                 #n è l'unico figlio (sinistro)
-                par.height = par.height + 1
+                if n.height == 2:
+                    #rotazione a destra su parent, richiede controllo dei ripoti
+                    if n.left is not None:
+                        lhn = n.left.height
+                    else:
+                        lhn = 0
+                    if n.right is not None:
+                        rhn = n.right.height
+                    else:
+                        rhn = 0
+                    
+                    if lhn >= rhn:
+                        rightRotate(par.index)
+                    else:
+                        leftRotate(n.index)
+                        rightRotate(par.index)
+                else:
+                    par.height = par.height + 1
+        
         else:
+            
             #n è figlio destro
             if par.left is not None:
-                if par.left.height < n.height:
-                    par.height = par.height + 1
+                if n.height - par.left.height == 2:
+                    #rotazione a sinistra su parent, richiede controllo dei ripoti
+                    if n.left is not None:
+                        lhn = n.left.height
+                    else:
+                        lhn = 0
+                    if n.right is not None:
+                        rhn = n.right.height
+                    else:
+                        rhn = 0
+                    
+                    if lhn > rhn:
+                        rightRotate(n.index)
+                        leftRotate(par.index)
+                    else:
+                        leftRotate(par.index)
+                elif n.height - par.left.height == 1:
+                    par.height = n.height + 1
                 else:
                     break
 
             else:
                 #n è l'unico figlio (destro)
-                par.height = par.height + 1
+                if n.height == 2:
+                    #rotazione a sinistra su parent, richiede controllo dei ripoti
+                    if n.left is not None:
+                        lhn = n.left.height
+                    else:
+                        lhn = 0
+                    if n.right is not None:
+                        rhn = n.right.height
+                    else:
+                        rhn = 0
+                    
+                    if lhn > rhn:
+                        rightRotate(n.index)
+                        leftRotate(par.index)
+                    else:
+                        leftRotate(par.index)
+                else:
+                    par.height = par.height + 1
         
         n = par
         if par.parent is None:
@@ -188,48 +264,116 @@ def findSuccessor(t, root, key):
     
     return x.index
     
-def fixHeightUpwRemove(nIndex):
-    
-    n = t[nIndex]
-    if n.right is None and n.left is None:
-        n.height = 1
-    elif n.left is None:
-        n.height = n.right.height + 1
-    elif n.right is None:
-        n.height = n.left.height + 1
-    else:
-        n.height = max(n.left.height, n.right.height) + 1
+def fixHeightUpwRemove(nIndex, pIndex):
+    if nIndex == -1:
+        # n è None
+        par = t[pIndex]
+        if par.left is not None:
+            # par ha figlio sx, n era destro ed è stato rimosso
+            if par.left.height == 2:
+                if par.left.left is not None:
+                    lh = 1
+                else:
+                    lh = 0
+                if par.left.right is not None:
+                    rh = 1
+                else:
+                    rh = 0
+                if lh >= rh:
+                    rightRotate(pIndex)
+                else:
+                    leftRotate(par.left.index)
+                    rightRotate(pIndex)
 
-    if n.parent is None:
-        par = None
-    else:
-        par = t[n.parent.index] 
+        elif par.right is not None:
+            # par ha figlio dx, n era sinistro ed è stato rimosso
+            if par.right.height == 2:
+                if par.right.left is not None:
+                    lh = 1
+                else:
+                    lh = 0
+                if par.right.right is not None:
+                    rh = 1
+                else:
+                    rh = 0
+                if lh > rh:
+                    rightRotate(par.right.index)
+                    leftRotate(pIndex)
+                else:
+                    leftRotate(pIndex)
+        else:
+            par.height = 1
+        
+        n = par
+        if par.parent is not None:
+            par = t[par.parent.index]
+        else:
+            par = None
 
-    #risalgo l'albero modificando le altezze necessarie - bigO(n)
+    else:
+        n = t[nIndex]
+        par = t[pIndex] 
+
+        #risalgo l'albero modificando le altezze necessarie 
     while par is not None:
         if par.left is not None and par.left.key == n.key:
+                
             #n è figlio sinistro
             if par.right is not None:
-                if par.right.height > n.height:
-                    break
+                if par.right.height - n.height == 2:
+                    #rotazione a sinistra su parent, richiede controllo dei ripoti
+                    if par.right.left is not None:
+                        lhn = par.right.left.height
+                    else:
+                        lhn = 0
+                    if par.right.right is not None:
+                        rhn = par.right.right.height
+                    else:
+                        rhn = 0
+                        
+                    if lhn > rhn:
+                        rightRotate(par.right.index)
+                        leftRotate(par.index)
+                    else:
+                        leftRotate(par.index)
+                elif par.right.height - n.height == 1:
+                    par.height = max(par.right.height, n.height)  + 1
                 else:
-                    par.height = max(n.height, par.right.height) + 1
-            
+                    par.height = max(par.right.height, n.height)  + 1
+                
             else:
-                #n è l'unico figlio (sinistro)
+                    #n è l'unico figlio (sinistro)
                 par.height = n.height + 1
+            
         else:
+            
             #n è figlio destro
             if par.left is not None:
-                if par.left.height > n.height:
-                    break
+                if par.left.height - n.height == 2:
+                        #rotazione a destra su parent, richiede controllo dei ripoti
+                    if par.left.left is not None:
+                        lhn = par.left.left.height
+                    else:
+                        lhn = 0
+                    if par.left.right is not None:
+                        rhn = par.left.right.height
+                    else:
+                        rhn = 0
+                        
+                    if lhn >= rhn:
+                        rightRotate(par.index)
+                    else:
+                        leftRotate(par.left.index)
+                        rightRotate(par.index)
+                elif par.left.height - n.height == 1:
+                    par.height = max(par.left.height, n.height) + 1
                 else:
                     par.height = max(par.left.height, n.height) + 1
-
+                
             else:
-                #n è l'unico figlio (destro)
+                    #n è l'unico figlio 
                 par.height = n.height + 1
-        
+            
         n = par
         if par.parent is None:
             par = None
@@ -272,8 +416,11 @@ def removeNode(t, root, key):
                 pNode.right = v
         else:
             pNode.right = v
-
-        fixHeightUpwRemove(pNode.index)
+        if v is None:
+            vIndex = -1
+        else:
+            vIndex = v.index
+        fixHeightUpwRemove(vIndex, pNode.index)
 
     else:
         root[0] = v
